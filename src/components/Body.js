@@ -2,6 +2,7 @@ import Header from "./Header";
 import Login from "./Login";
 import "../App.css";
 import DevicesCard from "./DevicesCard";
+import DevicesData from "./DevicesData";
 const Body = () => {
   return (
     <div className="body ">
@@ -12,8 +13,17 @@ const Body = () => {
         </div>
       </div>
       <div className="card-wrapper bg-black">
-        <div className="container">
-          <DevicesCard/>
+        <div className="custum-container">
+          {DevicesData.map((card, index) => {
+            return (
+              <DevicesCard
+                title={card.title}
+                subTitle={card.subTitle}
+                img={card.img}
+                key={index}
+              />
+            );
+          })}
         </div>
       </div>
     </div>
