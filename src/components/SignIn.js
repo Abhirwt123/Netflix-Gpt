@@ -1,4 +1,4 @@
-const Login = () => {
+const SignIn = () => {
   return (
     <div className="wrapper py-36">
       <div className="upper-sec">
@@ -30,4 +30,4 @@ const Login = () => {
     </div>
   );
 };
-export default Login;
+export default SignIn;
