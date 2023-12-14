@@ -1,8 +1,10 @@
-const DevicesCard = (props) => {
-  const {title,subTitle,img}=props
+const DevicesCard = ({ title, subTitle, img, index }) => {
   return (
-    <div className="wrapper border-gray-600 py-16 border-b-8">
-      <div className="box w-10/12 m-auto flex items-center justify-center">
+    <div className="dev-wrapper border-gray-600 py-16 border-b-8">
+      <div
+        className="box w-10/12 m-auto flex  items-center justify-center"
+        style={{ flexDirection: index % 2 === 0 ? "" : "row-reverse" }}
+      >
         <div className="text-wrap">
           <div className="title">
             <p className="text-white text-4xl font-bold py-4">{title}</p>

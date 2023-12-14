@@ -14,15 +14,17 @@ const Body = () => {
       </div>
       <div className="card-wrapper bg-black">
         <div className="custum-container">
-          {DevicesData.map((card, index) => {
-            return (
-              <DevicesCard
-                title={card.title}
-                subTitle={card.subTitle}
-                img={card.img}
-                key={index}
-              />
-            );
+            {
+                DevicesData.map((card, index) => {
+                  return (
+                  <DevicesCard
+                    title={card.title}
+                    subTitle={card.subTitle}
+                    img={card.img}
+                    key={index}
+                    index={index}
+                  />
+                );
           })}
         </div>
       </div>
