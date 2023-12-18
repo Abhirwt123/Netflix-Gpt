@@ -1,12 +1,16 @@
 import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { ValidateForm } from "../utils/Validate";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../utils/firebase";
 
 const SignUp = () => {
+  // setting the error message
   const [errorMessage, setErrorMessage] = useState("");
   const email = useRef("");
   const password = useRef("");
   const name = useRef("");
+  // validation function
   const handelButtonClick = () => {
     const message = ValidateForm(
       name.current.value,
@@ -14,6 +18,25 @@ const SignUp = () => {
       password.current.value
     );
     setErrorMessage(message);
+    if (message) return;
+// user auth.... using fire base
+    createUserWithEmailAndPassword(
+      auth,
+      email.current.value,
+      password.current.value
+    )
+      .then((userCredential) => {
+        // Signed up
+        const user = userCredential.user;
+        console.log(user)
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        setErrorMessage(errorCode +" "+ errorMessage)
+        // ..
+      });
   };
   return (
     <div className=" bg-[url('https://assets.nflxext.com/ffe/siteui/vlv3/b4c7f092-0488-48b7-854d-ca055a84fb4f/5b22968d-b94f-44ec-bea3-45dcf457f29e/IN-en-20231204-popsignuptwoweeks-perspective_alpha_website_large.jpg')]">
