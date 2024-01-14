@@ -1,10 +1,16 @@
 import { useRef, useState } from "react";
-import { Link } from "react-router-dom";
 import { ValidateForm } from "../utils/Validate";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { auth } from "../utils/firebase";
+import Header from "./Header";
+import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
+  const navigate=useNavigate()
+  const [isUserSignIn, setIsUserSignIn] = useState(true);
   // setting the error message
   const [errorMessage, setErrorMessage] = useState("");
   const email = useRef("");
@@ -19,35 +25,56 @@ const SignUp = () => {
     );
     setErrorMessage(message);
     if (message) return;
-// user auth.... using fire base
-    createUserWithEmailAndPassword(
-      auth,
-      email.current.value,
-      password.current.value
-    )
-      .then((userCredential) => {
-        // Signed up
-        const user = userCredential.user;
-        console.log(user)
-        // ...
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        setErrorMessage(errorCode +" "+ errorMessage)
-        // ..
-      });
+    // user auth.... using fire base
+    if (!isUserSignIn) {
+      //signup
+      createUserWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
+        .then((userCredential) => {
+          // Signed up
+          const user = userCredential.user;
+          console.log(user);
+          // ...
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMessage(errorCode+"-"+errorMessage);
+          // ..
+        });
+    } else {
+      //signIn
+      signInWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
+        .then((userCredential) => {
+          // Signed in
+          const user = userCredential.user;
+          console.log(user);
+          // ...
+          navigate("/browser")
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMessage(errorCode+"-"+errorMessage);
+          navigate("/")
+        });
+    }
+  };
+  const toggleSignIn = () => {
+    setIsUserSignIn(!isUserSignIn);
   };
   return (
     <div className=" bg-[url('https://assets.nflxext.com/ffe/siteui/vlv3/b4c7f092-0488-48b7-854d-ca055a84fb4f/5b22968d-b94f-44ec-bea3-45dcf457f29e/IN-en-20231204-popsignuptwoweeks-perspective_alpha_website_large.jpg')]">
       <div className="gradient">
         <div className="wrapper w-11/12  m-auto mb-16">
-          <div className="img-wrap w-2/12">
-            <img
-              src="https://images.ctfassets.net/4cd45et68cgf/7LrExJ6PAj6MSIPkDyCO86/542b1dfabbf3959908f69be546879952/Netflix-Brand-Logo.png?w=700&h=456"
-              alt="logo"
-            />
-          </div>
+          <Header/>
           <form
             className="w-5/12 m-auto flex justify-center bg-black bg-opacity-60 rounded-md"
             onSubmit={(e) => {
@@ -56,16 +83,18 @@ const SignUp = () => {
           >
             <div className="form-wrap w-8/12 py-12">
               <div className="title text-4xl text-white font-bold mb-6 text-center">
-                SignUp
+                {!isUserSignIn ? "Sign Up" : "Sign In"}
               </div>
               <div className="input-wrap">
                 <div className="name mb-8 ">
-                  <input
-                    ref={name}
-                    type="name"
-                    className=" w-full px-3 py-4 text-white bg-slate-900 placeholder:text-white rounded-md"
-                    placeholder="Full Name"
-                  />
+                  {!isUserSignIn && (
+                    <input
+                      ref={name}
+                      type="name"
+                      className=" w-full px-3 py-4 text-white bg-slate-900 placeholder:text-white rounded-md"
+                      placeholder="Full Name"
+                    />
+                  )}
                 </div>
                 <div className="email mb-8">
                   <input
@@ -91,11 +120,16 @@ const SignUp = () => {
                     className="bg-red-700 text-white px-3 py-4 rounded-md w-full font-bold"
                     onClick={handelButtonClick}
                   >
-                    Sign Up
+                    {!isUserSignIn ? "Sign Up" : "Sign In"}
                   </button>
 
-                  <div className="regesteredUser text-white py-4">
-                    Already Login ? <Link to="/">Sign In Now</Link>
+                  <div
+                    className="regesteredUser text-white py-4 cursor-pointer "
+                    onClick={toggleSignIn}
+                  >
+                    {!isUserSignIn
+                      ? " Sign Up for injoying your favourite Movie Series here"
+                      : "Sign Up"}
                   </div>
                 </div>
               </div>
